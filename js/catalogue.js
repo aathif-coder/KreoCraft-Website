@@ -77,7 +77,7 @@
     if (!button) return;
     // Open a dedicated category view. Query-string routing works on GitHub Pages
     // without server-side rewrite rules and keeps the project-site path intact.
-    const target = new URL('services.html', location.href);
+    const target = new URL('category.html', location.href);
     target.searchParams.set('category', slugify(button.dataset.category));
     location.href = target.href;
   });
