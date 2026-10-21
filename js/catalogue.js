@@ -25,8 +25,10 @@
   const categories = [...new Set(allServices.map(item => item.category))];
   const slugify = value => String(value || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const pathParts = location.pathname.split('/').filter(Boolean);
-  const routeCategorySlug = pathParts[0] === 'services' && pathParts.length > 1 ? pathParts[1] : '';
-  let selectedCategory = categories.find(category => slugify(category) === routeCategorySlug) || '';
+  const routeCategorySlug = new URLSearchParams(location.search).get('category') ||
+    (pathParts[0] === 'services' && pathParts.length > 1 ? pathParts[1] : '');
+  let selectedCategory = categories.find(category => slugify(category) === routeCategorySlug) ||
+    categories.find(category => category.toLowerCase() === routeCategorySlug.toLowerCase()) || '';
   let query = '';
   const pageTitle = document.getElementById('cataloguePageTitle');
   const pageIntro = document.querySelector('.catalogue-page-main .section-heading p');
@@ -73,11 +75,11 @@
   categoryHost.addEventListener('click', event => {
     const button = event.target.closest('[data-category]');
     if (!button) return;
-    selectedCategory = button.dataset.category;
-    query = '';
-    if (search) search.value = '';
-    renderCategories(); renderServices();
-    if (pageTitle) pageTitle.scrollIntoView({behavior:'smooth',block:'start'});
+    // Open a dedicated category view. Query-string routing works on GitHub Pages
+    // without server-side rewrite rules and keeps the project-site path intact.
+    const target = new URL('services.html', location.href);
+    target.searchParams.set('category', slugify(button.dataset.category));
+    location.href = target.href;
   });
   backButton?.addEventListener('click', () => {
     selectedCategory = ''; query = '';
