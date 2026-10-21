@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#101a33">
+  <meta name="description" content="View KreoCraft service details and enquire directly on WhatsApp."><title>Service Details — KreoCraft</title><link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="index.html" aria-label="KreoCraft home"><span class="brand-mark">K</span><span><strong>KreoCraft</strong><small>Print · Design · Create · Present</small></span></a><button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button><nav id="mainNav"><a href="index.html">Home</a><a href="services.html">Services</a><a href="index.html#gallery">Demo Gallery</a><a href="index.html#reviews">Reviews</a><a href="index.html#contact">Contact</a></nav><a class="button button-green header-cta" data-whatsapp href="#">WhatsApp Us ↗</a></header>
+  <main class="section section-wrap service-detail-main"><div id="serviceDetail"><p class="muted">Loading service details…</p></div></main>
+  <footer class="site-footer"><div class="footer-main section-wrap"><a class="brand brand-footer" href="index.html"><span class="brand-mark">K</span><span><strong>KreoCraft</strong><small>Print · Design · Create · Present</small></span></a><div><strong>Quick links</strong><a href="index.html">Home</a><a href="services.html">All services</a><a href="index.html#gallery">Demo Gallery</a></div><div><strong>Contact us</strong><span>WhatsApp: <span id="footerPhone">6362085708</span></span><span>India</span></div></div><div class="footer-bottom section-wrap"><span>© <span id="year"></span> KreoCraft. All rights reserved.</span><strong class="crafted-brand">Website crafted by KreoCraft</strong></div></footer>
+  <script src="js/catalogue-data.js"></script><script src="js/main.js"></script>
+  <script>
+  (() => {
+    const list = window.KREO_CATALOGUE || [];
+    const slugify = value => String(value || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    const slug = new URLSearchParams(location.search).get('name') || '';
+    const item = list.find(service => slugify(service.name) === slug);
+    const host = document.getElementById('serviceDetail');
+    const esc = value => String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    if (!item) { host.innerHTML = '<h1>Service not found</h1><p>We could not find that service in the catalogue.</p><a class="button button-green" href="services.html">Browse all services</a>'; return; }
+    const price = item.price === null || item.price === undefined || item.price === '' ? 'Contact for price' : `₹${new Intl.NumberFormat('en-IN',{maximumFractionDigits:2}).format(Number(item.price))}${item.priceUnit ? ` / ${esc(item.priceUnit)}` : ''}`;
+    const message = `Hi KreoCraft! I'd like to enquire about: ${item.name}. Please share the price and details.`;
+    const wa = `https://wa.me/6362085708?text=${encodeURIComponent(message)}`;
+    document.title = `${item.name} — KreoCraft`;
+    host.innerHTML = `<a class="text-link" href="services.html">← ${esc(item.category)}</a><div class="service-detail-layout"><div class="service-detail-image"><img src="${esc(item.image)}" alt="${esc(item.name)}" onerror="this.onerror=null;this.src='images/service-placeholder.svg'"></div><div class="service-detail-copy"><span class="eyebrow blue-text">${esc(item.category)}</span><h1>${esc(item.name)}</h1><p>${esc(item.description)}</p><div class="service-detail-price">${price}</div><p class="service-detail-note">Final pricing depends on your size, quantity, materials and requirements. Confirm the quotation before work begins.</p><a class="button button-green" data-service-whatsapp="${esc(item.name)}" href="${wa}" target="_blank" rel="noopener noreferrer">Enquire on WhatsApp ↗</a><p><a class="text-link" href="services.html">Browse all 69 services →</a></p></div></div>`;
+  })();
+  </script>
+</body></html>
